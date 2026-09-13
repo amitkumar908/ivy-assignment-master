@@ -1,7 +1,7 @@
 # Ivy Homes Take-Home Assessment
 
 ## Candidate Overview
-* **Name:** Amit Kumar Bhorayat (B.Tech CSE, MNNIT Allahabad)
+* **Name:** Amit Kumar Bhorayat 
 * **City:** Gurgaon
 * **Assigned Locality:** Sector 49
 
