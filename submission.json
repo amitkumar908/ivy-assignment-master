@@ -1,0 +1,150 @@
+{
+  "api_key": "IVY26-2F6846101A29",
+  "candidate": {
+    "name": "Amit Kumar Bhorayat",
+    "email": "amitkumarbhorayat001@gmail.com",
+    "repo_url": "https://github.com/amitkumar908/ivy-assignment-master",
+    "demo_url": "https://ivy-assignment-master.vercel.app/"
+  },
+  "answers": {
+    "total_listing_records": 3350,
+    "unique_properties": 50,
+    "active_listings": 2546,
+    "corrupt_listing_ids": [
+      "MAG-6000434",
+      "MAG-6000794",
+      "MAG-6001288",
+      "MAG-6002640"
+    ],
+    "total_monthly_rent": 8491600,
+    "avg_price_per_sqft_2bhk": 10637.85,
+    "costliest_project": {
+      "project_id": "P60036",
+      "price_max_inr": 46900000
+    },
+    "listings_last_7_days": 0,
+    "fake_listing_ids": [
+      "100-6000047",
+      "100-6000815",
+      "100-6001161",
+      "100-6002836",
+      "100-6002888",
+      "DWE-6001345",
+      "DWE-6002796",
+      "MAG-6000434",
+      "MAG-6002450",
+      "MAG-6002960",
+      "SQU-6002517",
+      "ZER-6001139",
+      "ZER-6002724",
+      "ZER-6003343"
+    ],
+    "projects_with_wrong_listing_count": 368
+  },
+  "findings": [
+    {
+      "endpoint": "/v1/listings",
+      "category": "completeness",
+      "documented": "Returns active sale listings only; inactive, expired and withdrawn listings are excluded server side.",
+      "actual": "The collection includes records with is_live set to false.",
+      "how_found": "Compared the documented active-only claim with is_live across the complete downloaded listing collection.",
+      "impact": "Clients must filter is_live before presenting listings as active.",
+      "evidence": [
+        "100-6001196",
+        "100-6001939",
+        "100-6003034",
+        "DWE-6002177",
+        "DWE-6002689",
+        "DWE-6002796",
+        "MAG-6000794",
+        "MAG-6001288",
+        "SQU-6000737",
+        "SQU-6000987",
+        "SQU-6001937",
+        "SQU-6003155"
+      ]
+    },
+    {
+      "endpoint": "/v1/listings",
+      "category": "data_quality",
+      "documented": "Each listing corresponds to a physical property and carpet_area is measured in square feet.",
+      "actual": "Four records have carpet areas below 150 square feet and describe impossible property records; these were excluded from the 2 BHK price-per-square-foot calculation.",
+      "how_found": "Tested extreme carpet_area values and inspected the affected records.",
+      "impact": "These records must be excluded from property metrics and flagged for review.",
+      "evidence": [
+        "MAG-6000434",
+        "MAG-6000794",
+        "MAG-6001288",
+        "MAG-6002640"
+      ]
+    },
+    {
+      "endpoint": "/v1/listings",
+      "category": "fraud",
+      "documented": "posted_by_contact is the seller's verified contact number and posted_by identifies the seller type.",
+      "actual": "A small group of records marked as owner share high-frequency contact numbers, indicating listings created to generate enquiries rather than genuine inventory.",
+      "how_found": "Counted owner listings by posted_by_contact and reviewed contacts appearing more than three times.",
+      "impact": "Fake records must be excluded from trusted inventory and derived metrics.",
+      "evidence": [
+        "100-6000047",
+        "100-6000815",
+        "100-6001161",
+        "100-6002836",
+        "100-6002888",
+        "DWE-6001345",
+        "DWE-6002796",
+        "MAG-6000434",
+        "MAG-6002450",
+        "MAG-6002960",
+        "SQU-6002517",
+        "ZER-6001139",
+        "ZER-6002724",
+        "ZER-6003343"
+      ]
+    },
+    {
+      "endpoint": "/v1/projects",
+      "category": "units",
+      "documented": "price_min and price_max are in Indian rupees.",
+      "actual": "Project prices are expressed in crores; price_max 4.69 for P60036 represents 46,900,000 INR.",
+      "how_found": "Compared project price magnitudes with the documented rupee unit and converted crore values to rupees.",
+      "impact": "Prices must be multiplied by 10,000,000 before display or comparison in rupees.",
+      "evidence": [
+        "P60001",
+        "P60002",
+        "P60003",
+        "P60036"
+      ]
+    },
+    {
+      "endpoint": "/v1/projects",
+      "category": "consistency",
+      "documented": "total_listings is recomputed and always agrees with listings returned for the project.",
+      "actual": "The reported total_listings disagrees with the count of downloaded listing records for 368 projects.",
+      "how_found": "Grouped all downloaded listings by project_id and compared each count with the corresponding project total_listings.",
+      "impact": "Project listing counts cannot be trusted without recalculating them from listings.",
+      "evidence": [
+        "P60001",
+        "P60002",
+        "P60003",
+        "P60004",
+        "P60005",
+        "P60006",
+        "P60007",
+        "P60008",
+        "P60009",
+        "P60010",
+        "P60011",
+        "P60012",
+        "P60013",
+        "P60014",
+        "P60015",
+        "P60016",
+        "P60017",
+        "P60018",
+        "P60019",
+        "P60020"
+      ]
+    }
+  ]
+}
